@@ -1,9 +1,105 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-
-Cody is trying to add stuff
-
-print("hello")
-
-#Now we are going to attempt to merge our info 
+from tabulate import tabulate
+class Doctor:
+    def __init__(self, id, name, spec, work_time, qual, roomNum):
+        self.id = id
+        self.name = name
+        self.spec = spec
+        self.work_time = work_time
+        self.qual = qual
+        self.roomNum = roomNum
+    def formatDocInfo(doctor_list): 
+        formated_list = '\n'.join(['_'.join(sublist) for sublist in doctor_list])
+        return formated_list
+    def enterDocInfo():
+        id = input(f"Please enter the doctor's ID: ")
+        name = input(f"Please enter the doctor's name: ")
+        spec = input(f"Please enter the doctor's specialization: ")
+        work_time = input(f"Please enter the doctor's work hours: ")
+        qual = input(f"Please enter the doctor's qualifications: ")
+        roomNum = input(f"Please enter the doctor's room number: ")
+        drInfo = [id, name, spec, work_time, qual, roomNum]
+        return drInfo
+    def readDocFile():
+        doc_list = []
+        list = []
+        file = open('doctors.txt','r')
+        read = file.readlines()
+        for line in read:
+            list.append(line.strip())
+        for x in range (len(list)):
+            doc_list.append(list[x].split("_"))
+        file.close()
+        return doc_list
+    def searchDocByID(doctor_list):
+        tempID = input(f"Please enter the doctor's ID: ")
+        for x in range(len(doctor_list)):
+            if doctor_list[x][0] == tempID:
+                head = ["ID", "Name", "Specialty", "Timing", "Qualifications", "Room Number"]
+                print (tabulate([doctor_list[x]], headers=head, tablefmt="fancy_grid"))
+                return x
+        print (f"Can't find the doctor with the same ID on the system.")
+        return 
+    def searchDocByName(doctor_list):
+        tempName = input(f"Please enter the doctor's name: ")
+        for x in range(len(doctor_list)):
+            if doctor_list[x][1] == tempName:
+                head = ["ID", "Name", "Specialty", "Timing", "Qualifications", "Room Number"]
+                print (tabulate([doctor_list[x]], headers=head, tablefmt="fancy_grid"))
+                return x
+        print (f"Can't find the doctor with the same name on the system.")
+        return 
+    def displayDocInfo(doctor_list,x):
+        head = ["ID", "Name", "Specialty", "Timing", "Qualifications", "Room Number"]
+        print (tabulate(doctor_list[x], headers=head, tablefmt="fancy_grid"))
+        return doctor_list
+    def editDocInfo (doctor_list):
+        editID = input(f"Please enter the ID of the doctor that you want to edit their information: ")
+        for x in range(len(doctor_list)):
+            if doctor_list[x][0] == editID:
+                id = input(f"Please enter the doctor's ID: ")
+                name = input(f"Please enter the new doctor's name: ")
+                spec = input(f"Please enter the new doctor's specialization: ")
+                work_time = input(f"Please enter the new doctor's work hours: ")
+                qual = input(f"Please enter the new doctor's qualifications: ")
+                roomNum = input(f"Please enter the new doctor's room number: ")
+                drInfo = [id, name, spec, work_time, qual, roomNum]
+                doctor_list[x] = drInfo
+            else:
+                print (f"Can't find the doctor with the same ID on the system")
+        return doctor_list
+    def displayDocList (doctor_list):
+        head = ["ID", "Name", "Specialty", "Timing", "Qualifications", "Room Number"]
+        print (tabulate(doctor_list, headers=head, tablefmt="fancy_grid"))
+        return
+    def writeListOfDocToFile (formated_list):
+        with open ('doctors.txt', 'w') as file:
+            file.write(formated_list)
+        pass
+    def displayDocMenu ():
+        doc_choice = int(input(f'Doctors Menu:\n1- Display Doctors List\n2- Search for doctor by ID\n3- Search for doctor by name\n4- Add a doctor\n5- Edit doctor info\n6- Back to the main menu\n'))
+        if doc_choice == 1:
+            doc_list = Doctor.readDocFile()
+            Doctor.displayDocList(doc_list)
+            Doctor.displayDocMenu()
+        elif doc_choice ==2:
+            doc_list = Doctor.readDocFile()
+            Doctor.searchDocByID(doc_list)
+            Doctor.displayDocMenu()
+        elif doc_choice ==3:
+            doc_list = Doctor.readDocFile()
+            Doctor.searchDocByName(doc_list)
+            Doctor.writeListOfDocToFile(Doctor.formatDocInfo(doc_list))
+            Doctor.displayDocMenu()
+        elif doc_choice ==4:
+            doc_list = Doctor.readDocFile()
+            drInfo = Doctor.enterDocInfo()
+            doc_list.append(drInfo)
+            Doctor.writeListOfDocToFile(Doctor.formatDocInfo(doc_list))
+            Doctor.displayDocMenu()
+        elif doc_choice ==5:
+            doc_list = Doctor.readDocFile()
+            doc_list = Doctor.editDocInfo(doc_list)
+            Doctor.writeListOfDocToFile(Doctor.formatDocInfo(doc_list))
+            Doctor.displayDocMenu()
+        elif doc_choice ==6:
+            return
