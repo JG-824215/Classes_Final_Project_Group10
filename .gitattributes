@@ -1,3 +1,11 @@
+# Victoria Porter, Jalen Greenidge, Cody Gammon
+# Group 10
+# Dec. 16, 2022
+# CPRG216-ITB Project: Classes
+###############################################
+
+############### Class #1: Doctor ###############################################
+
 from tabulate import tabulate
 class Doctor:
     def __init__(self, id, name, spec, work_time, qual, roomNum): ### initializes variables for the doctor class ###
@@ -35,7 +43,7 @@ class Doctor:
         for x in range(len(doctor_list)):
             if doctor_list[x][0] == tempID:
                 print (tabulate([doctor_list[x]], tablefmt="fancy_grid"))
-                return 
+                return x
         print (f"Can't find the doctor with the same ID on the system.")
         return 
     def searchDocByName(doctor_list):### takes the list of docs, asks the user for a doctor name, and searches the list for a doctor with that specific name ### 
@@ -100,7 +108,130 @@ class Doctor:
             Doctor.displayDocMenu()
         elif doc_choice ==6:
             DisplayMenu()
-class Patient:
+
+################################################################################
+
+############### Class #2: Facility #############################################
+
+from typing import List
+
+class Facility:
+    def __init__(self, facility_name):
+        self.facility_name = facility_name
+
+    def addFacility(self): ### allows for the user to add facilities
+        with open("facilities.txt", "a") as file:
+            file.write("\n")
+            file.write(self.facility_name)
+        file.close()
+
+def displayFacilities(): ### displays a list of facilities from the .txt file
+    with open("facilities.txt", "r") as file:
+        for line in file:
+            print(line)
+    file.close()
+
+def writeListOfFacilitiesToFile(facilities_list: List[Facility]): ### writes text to file
+    for facility in facilities_list:
+        facility.addFacility()
+    
+def display_f_menu(): ### displays the menu for facility 
+    print("Facilities Menu:")
+    print("1 - Display Facilities list")
+    print("2 - Add Facility")
+    print("3 - Back to the Main Menu")
+    
+    category = int(input()) 
+    if category == 1:
+        displayFacilities()
+        display_f_menu()
+    elif category == 2:
+        data = input("Enter Facility name: ")
+        facility = Facility(data)
+        facility.addFacility()
+        display_f_menu()
+    elif category == 3:
+        DisplayMenu()
+
+################################################################################
+
+
+############## Class #3: Laboratory #############################################
+
+from typing import List
+
+class Laboratory:  ### Laboratory class
+    def __init__(self, lab_name, cost):
+        self.lab_name = lab_name
+        self.cost = cost
+
+    def __str__(self):  
+        return f"{self.lab_name}, {self.cost}"
+
+    def addLabToFile(self): ### adds to the .txt file
+        l_info = self.formatLabInfo()
+        with open("laboratories.txt", "a") as file:
+            file.write("\n")
+            file.write(l_info)
+            file.close()
+
+    def formatLabInfo(self): ### formats the .txt file
+        lab_info = f"{self.lab_name}_{self.cost}"
+        return lab_info
+
+    def readLaboratoriesFile(self): ### reads the .txt file
+        with open("laboratories.txt", "r") as file:
+            for line in file:
+                print(line)
+            file.close()
+
+def writeListOfLabsToFile(labs_list: List[Laboratory]): ### adds list to lab files
+    for lab in labs_list:
+        lab.addLabToFile()
+
+
+def enterLaboratoryInfo(): ### asks user to input lab facility and lab cost
+    lab_name = input("Enter Laboratory facility: ")
+    cost = input("Enter Laboratory cost: ")
+    return lab_name, cost
+
+def displayLabsList(file): ### displays the lab list 
+    labs = []
+    with open(file, "r") as f:
+        for line in f:
+            lab_name, cost = line.strip().split("_")
+            labs.append(Laboratory(lab_name.strip(), cost.strip()))
+        f.close()
+    for l in labs:
+        print(l)
+
+def display_l_menu(): ### displays lab menu 
+    print("Laboratories Menu: ")
+    print("1 - Display laboratories list")
+    print("2 - Add laboratory")
+    print("3 - Back to the Main Menu")
+
+    category = int(input())
+
+    if category == 1:
+        displayLabsList("laboratories.txt")
+        display_l_menu()
+
+    elif category == 2:
+        lab_name, cost = enterLaboratoryInfo()
+        lab = Laboratory(lab_name, cost)
+        lab.addLabToFile()
+        display_l_menu()
+    elif category == 3:
+        DisplayMenu()
+
+################################################################################
+
+########## Class #4: Patient ####################################################
+
+from typing import List
+
+class Patient: ### Patient class
     def __init__(self, pid, name, disease, gender, age):
         self.pid = pid
         self.name = name
@@ -108,100 +239,34 @@ class Patient:
         self.gender = gender
         self.age = age
 
-    def __str__(self):
+    def __str__(self): ### method to str all the veriables
         return f"{self.pid}, {self.name}, {self.disease}, {self.gender}, {self.age}"
 
-    def formatPatientInfo(self):
+    def formatPatientInfo(self): ### formats the patient info 
         p_info = f"{self.pid}_{self.name}_{self.disease}_{self.gender}_{self.age}"
         return p_info
 
-    def readPatientsFile(self):
+    def readPatientsFile(self): ### read the patient file from the .txt file
         with open("patients.txt", "r") as file:
-
-class Facility:
-    def __init__(self, facility_name):
-        self.facility_name = facility_name
-
-    def addFacility(self):
-        with open("facilities.txt", "a") as file:
-            file.write("\n")
-            file.write(self.facility_name)
-        file.close()
-
-def displayFacilities():
-    with open("facilities.txt", "r") as file:
-        for line in file:
-            print(line)
-    file.close()
-    
-
-def writeListOfFacilitiesToFile(facilities_list: List[Facility]):
-    for facility in facilities_list:
-        facility.addFacility()
-    
-def display_f_menu():
-    print("Facilities Menu:")
-    print("1 - Display Facilities list")
-    print("2 - Add Facility")
-    print("3 - Back to the Main Menu")
-    
-    category = int(input())
-    if category == 1:
-        displayFacilities()
-    elif category == 2:
-        data = input("Enter Facility name: ")
-        facility = Facility(data)
-        facility.addFacility()
-    elif category == 3:
-        return
-
-display_f_menu()
-
-from typing import List
-
-
-class Laboratory:
-    def __init__(self, lab_name, cost):
-        self.lab_name = lab_name
-        self.cost = cost
-
-    def __str__(self):
-        return f"{self.lab_name}, {self.cost}"
-
-    def addLabToFile(self):
-        l_info = self.formatLabInfo()
-        with open("laboratories.txt", "a") as file:
-            file.write("\n")
-            file.write(l_info)
-            file.close()
-
-    def formatLabInfo(self):
-        lab_info = f"{self.lab_name}_{self.cost}"
-        return lab_info
-
-    def readLaboratoriesFile(self):
-        with open("laboratories.txt", "r") as file:
-
             for line in file:
                 print(line)
             file.close()
 
-
-    def displayPatientInfo(self):
+    def displayPatientInfo(self): ### display the info of the patients
         print(f"ID: {self.pid}")
         print(f"Name: {self.name}")
         print(f"Disease: {self.disease}")
         print(f"Gender: {self.gender}")
         print(f"Age: {self.age}")
 
-    def addPatientToFile(self):
+    def addPatientToFile(self): ### adds patient to .txt file
         p_info = self.formatPatientInfo()
         with open("patients.txt", "a") as file:
             file.write("\n")
             file.write(p_info)
             file.close()
 
-def editPatientInfo(pid):
+def editPatientInfo(pid): ### edit patient by id and re-writes the new information
     name = input("Enter new name: ")
     disease = input("Enter new disease: ")
     gender = input("Enter new gender: ")
@@ -215,7 +280,7 @@ def editPatientInfo(pid):
     with open("patients.txt", "w") as file:
         file.writelines(data)
 
-def enterPatientInfo():
+def enterPatientInfo(): ### input patient info
     pid = input("Enter Patient ID: ")
     name = input("Enter Patient name: ")
     disease = input("Enter Patient disease: ")
@@ -223,7 +288,7 @@ def enterPatientInfo():
     age = input("Enter Patient age:")
     return pid, name, disease, gender, age
 
-def displayPatientList(file):
+def displayPatientList(file): ### display the list of patients 
     patients = []
     with open(file, "r") as f:
         for line in f:
@@ -233,7 +298,7 @@ def displayPatientList(file):
     for p in patients:
         print(p)
 
-def searchPatientById(pid):
+def searchPatientById(pid): ### search for a patient by ID in the file
     with open("patients.txt", "r") as file:
         for line in file:
             if line.startswith(pid):
@@ -247,47 +312,20 @@ def searchPatientById(pid):
                 return Patient(pid, name, disease, gender, age)
         file.close()
 
-def writeListOfPatientsToFile(patients_list: List[Patient]):
+def writeListOfPatientsToFile(patients_list: List[Patient]): ### write list of patient of files
     for patient in patients_list:
         patient.addPatientToFile()
 
-def DisplayPatientsMenu():
+def DisplayPatientsMenu():  ### display the patient menu 
     print("1 - Display patients list")
     print("2 - Search for patient by ID")
     print("3 - Add patient")
     print("4 - Edit patient info")
     print("5 - Back to the Main Menu")
 
-def writeListOfLabsToFile(labs_list: List[Laboratory]):
-    for lab in labs_list:
-        lab.addLabToFile()
-
-
-def enterLaboratoryInfo():
-    lab_name = input("Enter Laboratory facility: ")
-    cost = input("Enter Laboratory cost: ")
-    return lab_name, cost
-
-def displayLabsList(file):
-    labs = []
-    with open(file, "r") as f:
-        for line in f:
-            lab_name, cost = line.strip().split("_")
-            labs.append(Laboratory(lab_name.strip(), cost.strip()))
-        f.close()
-    for l in labs:
-        print(l)
-
-def display_l_menu():
-    print("Laboratories Menu: ")
-    print("1 - Display laboratories list")
-    print("2 - Add laboratory")
-    print("3 - back to the Main Menu")
-
     category = int(input())
 
     if category == 1:
-
         displayPatientList("patients.txt")
         DisplayPatientsMenu()
 
@@ -315,19 +353,39 @@ def display_l_menu():
             print("No patient found with that ID.")
         DisplayPatientsMenu()
     elif category == 5:
+        DisplayMenu()
+
+#################################################################################
+
+############# Class #5: Management ##############################################
+
+def DisplayMenu(): ### first menu
+    print("Welcome to Alberta Hospital (AH) Managment system")
+    print("Select from the following options, or select 0 to stop: ")
+    print("1 - Doctors")
+    print("2 - Facilities")
+    print("3 - Laboratories")
+    print("4 - Patients")
+
+    category = int(input()) #T## takes input goes into the category 1-4
+
+    if category == 1: ### goes to doctors menu
+        Doctor.displayDocMenu()
+
+    elif category == 2: ### goes to facilities menu
+        display_f_menu()
+
+    elif category == 3: ### goes to labs menu
+        display_l_menu()
+
+    elif category == 4: ### goes to patient menu
+        DisplayPatientsMenu()
+
+    elif category == 0: ### stops the program
         return
 
-DisplayPatientsMenu()
-    
+    elif category <0 or category >=5: ### informs user to input valid number
+        print ("Please input a valid number between 0-4\n")
+        DisplayMenu()
 
-        displayLabsList("laboratories.txt")
-
-    elif category == 2:
-        lab_name, cost = enterLaboratoryInfo()
-        lab = Laboratory(lab_name, cost)
-        lab.addLabToFile()
-    elif category == 3:
-        return
-
-display_l_menu()
-
+DisplayMenu()
